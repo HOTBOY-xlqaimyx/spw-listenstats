@@ -30,7 +30,7 @@ spw-listenstats/
 ├── plugin/                    Kotlin 插件（Gradle 工程，自带包装器）
 │   ├── src/main/kotlin/…      统计引擎 / 存储 / 上报 / 本地报告 / 自测（11 个 .kt）
 │   ├── src/main/resources/    preference_config.json（配置页声明）、web/report.html（内置报告页模板）
-│   ├── docs/                  架构、宿主实测笔记、测试策略、发版流程、上游 1.19 计划
+│   ├── docs/                  架构说明、宿主实测笔记
 │   ├── DESIGN.md              设计边界与决策
 │   ├── README.md              插件主文档（安装 / 配置 / 协议 / 排障）
 │   └── gradlew · build.gradle.kts · gradle/   构建入口与包装器
@@ -39,9 +39,8 @@ spw-listenstats/
 ├── web/                       报告页（单文件纯前端）
 │   ├── index.html             页面源文件
 │   └── tools/build-report-page.py   部署前生成内联二维码
-├── docs/                      宿主 API 研究、组件关系图、发布检查清单
-├── .github/                   CI 工作流 + Issue / PR 模板
-├── README.md · CHANGELOG.md · CONTRIBUTING.md · SECURITY.md · CODE_OF_CONDUCT.md
+├── .github/workflows/ci.yml   构建与自测（推 PR 时自动跑）
+├── README.md · CHANGELOG.md · SECURITY.md
 ├── LICENSE · NOTICE           Apache-2.0 与第三方声明
 └── .editorconfig · .gitattributes · .gitignore
 ```
@@ -57,12 +56,7 @@ spw-listenstats/
 | [plugin/DESIGN.md](plugin/DESIGN.md) | 设计边界与决策（会话切分规则、上报协议、明确不做的事） |
 | [plugin/docs/ARCHITECTURE.md](plugin/docs/ARCHITECTURE.md) | 组件与数据流、持久化格式、本地 vs 在线两种输出形态 |
 | [plugin/docs/HOST-NOTES.md](plugin/docs/HOST-NOTES.md) | 宿主实测笔记（真实路径、加载流程、回调行为、运行时模块坑） |
-| [plugin/docs/TESTING.md](plugin/docs/TESTING.md) | 三层验证各覆盖什么、怎么跑、历史教训 |
-| [plugin/docs/RELEASE.md](plugin/docs/RELEASE.md) | 版本规则、发版命令、快速通道、发版清单 |
-| [plugin/docs/UPSTREAM-1.19.md](plugin/docs/UPSTREAM-1.19.md) | 上游 API 现状与 SPW 1.19 将带来的能力（含「查询当前曲目」） |
 | [receiver/README.md](receiver/README.md) | 接收端部署、聚合口径、接口与排障 |
-| [docs/spw-workshop-api-study.md](docs/spw-workshop-api-study.md) | 宿主 API 调研与踩坑清单 |
-| [docs/diagrams/spw-listenstats-arch.html](docs/diagrams/spw-listenstats-arch.html) | 组件关系图（单文件，浏览器直接打开） |
 
 ## 兼容性
 

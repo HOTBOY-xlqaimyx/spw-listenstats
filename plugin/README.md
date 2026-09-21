@@ -23,10 +23,7 @@
 |---|---|
 | 本文件 | 安装、配置、数据文件、上报协议、日志排障、构建 |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 组件与数据流、持久化格式、线程模型、关键约束 |
-| [docs/UPSTREAM-1.19.md](docs/UPSTREAM-1.19.md) | **上游动态**：SPW 1.19 新 API（含 `getCurrentMediaItem()`）、权限与 `.spmod` 打包、我们的适配清单 |
 | [docs/HOST-NOTES.md](docs/HOST-NOTES.md) | **宿主实测笔记**：真实路径、加载流程、回调行为、运行时模块坑 |
-| [docs/TESTING.md](docs/TESTING.md) | 三层验证各覆盖什么、怎么跑、历史教训 |
-| [docs/RELEASE.md](docs/RELEASE.md) | 版本规则、发版命令、快速通道、发版清单 |
 | [../receiver/README.md](../receiver/README.md) | **阶段 2**：接收端部署、聚合接口、报告页数据来源 |
 | [DESIGN.md](DESIGN.md) | 设计边界与决策表（会话切分规则、上报协议） |
 | [CHANGELOG.md](../CHANGELOG.md) | 每版改了什么 + 发版清单 |
@@ -40,7 +37,7 @@
 
 - 构建产物：`plugin/build/dist/ListenStats-<版本>.zip`（`cd plugin && ./gradlew plugin`）
 - 分发方式随你：GitHub Releases、自己的静态站 / SMB 共享、网盘都行 —— 插件本身不依赖任何分发渠道
-- 接收端与报告页是**另一套版本号**（见 [../receiver/README.md](../receiver/README.md) 与本目录 `docs/RELEASE.md`）
+- 接收端与报告页是**另一套版本号**（见 [../receiver/README.md](../receiver/README.md) 与根 `CHANGELOG.md` 的发版清单）
 
 ## 安装
 

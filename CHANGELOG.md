@@ -20,8 +20,8 @@
 
 - **修**：插件 manifest 的 `Plugin-Open-Source-Url` 原本指向上游 API 仓库，现在指向本仓库。
   （1.0.0 是首个正式版，其它内容与它一致；`Plugin-Provider` 仍为作者原有署名。）
-- **仓库**：完成标准化（monorepo + Apache-2.0 + NOTICE + 社区文件 + CI）与**脱敏**
-  （内网地址/私有路径/容器名全部改为通用写法，详见 `docs/PUBLISH-CHECKLIST.md`）。
+- **仓库**：完成标准化（monorepo + Apache-2.0 + NOTICE + CI）与**脱敏**
+  （内网地址/私有路径/容器名全部改为通用写法）。
 
 ## 1.0.0 —— 首个正式版
 
@@ -33,8 +33,7 @@
   拷走数据目录即完成搬迁。
 - **上报协议稳定**：`spw.listenstats.v1`（后续只做增量字段，见 `plugin/DESIGN.md`）。
 - **合规**：Apache-2.0；随包附 `LICENSE` 与 `NOTICE`（`lib/` 内含 kotlin-stdlib，已按许可证要求保留声明）。
-- **仓库标准化**：monorepo 结构（`plugin/` `receiver/` `web/` `docs/`）+ `CONTRIBUTING` / `SECURITY` /
-  `CODE_OF_CONDUCT` / Issue 与 PR 模板 / GitHub Actions CI（构建 + 自测 + 产出 zip）。
+- **仓库标准化**：monorepo 结构（`plugin/` `receiver/` `web/`）+ `SECURITY.md` + GitHub Actions CI（构建 + 自测 + 产出 zip）。
 - 已知限制见根 README 的「已知限制」一节（宿主无切歌回调导致的「未归因」等）。
 
 **1.x 版本规则**：不兼容变更 → 主版本；兼容新功能 → 次版本；修 bug / 文案 → 修订号。
@@ -66,7 +65,7 @@
 - **删死代码**：`ReportExport.exportSnapshot()`（带时间戳的快照导出）没有任何调用方。
 - **文档补缺**：README 新增「本地报告（默认形态）」整节（位置/刷新时机/手机看/备份搬迁/已知局限）；
   `ARCHITECTURE.md` 数据流补 `sessions.jsonl` 与本地报告，并新增「输出形态（本地 vs 在线）」对照表；
-  `RELEASE.md` 补「改了报告页要多跑一步」（页面必须用构建脚本生成二维码，且要同步插件内置模板并升插件版本）。
+  发版流程补「改了报告页要多跑一步」（页面必须用构建脚本生成二维码，且要同步插件内置模板并升插件版本）。
 
 验证：`selftest` **205 项**（新增：裁剪后文件行数、追加写不重写（外部行仍在）、坏行只跳过自己、坏行有告警）。
 
