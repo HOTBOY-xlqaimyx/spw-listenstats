@@ -22,8 +22,8 @@
 | 文档 | 内容 |
 |---|---|
 | 本文件 | 安装、配置、数据文件、上报协议、日志排障、构建 |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 组件与数据流、持久化格式、线程模型、关键约束 |
-| [docs/HOST-NOTES.md](docs/HOST-NOTES.md) | **宿主实测笔记**：真实路径、加载流程、回调行为、运行时模块坑 |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | 组件与数据流、持久化格式、线程模型、关键约束 |
+| [HOST-NOTES.md](HOST-NOTES.md) | **宿主实测笔记**：真实路径、加载流程、回调行为、运行时模块坑 |
 | [../receiver/README.md](../receiver/README.md) | **阶段 2**：接收端部署、聚合接口、报告页数据来源 |
 | [DESIGN.md](DESIGN.md) | 设计边界与决策表（会话切分规则、上报协议） |
 | [CHANGELOG.md](../CHANGELOG.md) | 每版改了什么 + 发版清单 |

@@ -30,14 +30,15 @@ spw-listenstats/
 ├── plugin/                    Kotlin 插件（Gradle 工程，自带包装器）
 │   ├── src/main/kotlin/…      统计引擎 / 存储 / 上报 / 本地报告 / 自测（11 个 .kt）
 │   ├── src/main/resources/    preference_config.json（配置页声明）、web/report.html（内置报告页模板）
-│   ├── docs/                  架构说明、宿主实测笔记
+│   ├── ARCHITECTURE.md · HOST-NOTES.md   架构说明、宿主实测笔记
 │   ├── DESIGN.md              设计边界与决策
 │   ├── README.md              插件主文档（安装 / 配置 / 协议 / 排障）
 │   └── gradlew · build.gradle.kts · gradle/   构建入口与包装器
 ├── receiver/                  Python 接收端（只用标准库）
 │   ├── receiver.py · docker-compose.yml · README.md
 ├── web/                       报告页（单文件纯前端）
-│   ├── index.html             页面源文件
+│   ├── index.html             页面源文件（在线页与本地报告共用）
+│   ├── README.md              两种用法差异 + 改完必须跑构建
 │   └── tools/build-report-page.py   部署前生成内联二维码
 ├── .github/workflows/ci.yml   构建与自测（推 PR 时自动跑）
 ├── README.md · CHANGELOG.md · SECURITY.md
@@ -54,8 +55,8 @@ spw-listenstats/
 |---|---|
 | [plugin/README.md](plugin/README.md) | **主文档**：安装、配置表、数据文件、上报协议、日志排障、构建 |
 | [plugin/DESIGN.md](plugin/DESIGN.md) | 设计边界与决策（会话切分规则、上报协议、明确不做的事） |
-| [plugin/docs/ARCHITECTURE.md](plugin/docs/ARCHITECTURE.md) | 组件与数据流、持久化格式、本地 vs 在线两种输出形态 |
-| [plugin/docs/HOST-NOTES.md](plugin/docs/HOST-NOTES.md) | 宿主实测笔记（真实路径、加载流程、回调行为、运行时模块坑） |
+| [plugin/ARCHITECTURE.md](plugin/ARCHITECTURE.md) | 组件与数据流、持久化格式、本地 vs 在线两种输出形态 |
+| [plugin/HOST-NOTES.md](plugin/HOST-NOTES.md) | 宿主实测笔记（真实路径、加载流程、回调行为、运行时模块坑） |
 | [receiver/README.md](receiver/README.md) | 接收端部署、聚合口径、接口与排障 |
 
 ## 兼容性

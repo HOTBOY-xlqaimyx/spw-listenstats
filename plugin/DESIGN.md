@@ -104,6 +104,6 @@ User-Agent: SPW-ListenStats/1.0.0
 2. **回调里不抛异常**：扩展点实现统一 `try/catch` + 写日志，异常冒到宿主里会污染播放链路。
 3. **零第三方运行时依赖**（除 kotlin-stdlib）：宿主是 jlink 裁剪运行时，联网只能用 `HttpURLConnection`（没有 `java.net.http`）。
 4. **配置项要改三处**：`preference_config.json`、`ConfigKeys.ALL`、README 配置表；`selftest` 会比对前两者，漏一处就失败。
-5. **改报告页要同步三处**：`web/index.html`（源）→ 用 `web/tools/build-report-page.py` 生成线上页 → 复制成 `plugin/src/main/resources/web/report.html` 并升插件版本。
+5. **改报告页要同步三处**：`web/index.html`（源）→ 用 `web/tools/build-report-page.py` 生成线上页（见 `web/README.md`）→ 复制成 `plugin/src/main/resources/web/report.html` 并升插件版本。
 6. **文案面向普通用户**：结论前置、不用实现术语、示例用通用地址（不写自己的内网地址）。
 7. **不提交个人数据**：`sessions.jsonl` / `listenstats.json` / `report-data.json` 与含真实听歌记录的示例都不进仓库。
