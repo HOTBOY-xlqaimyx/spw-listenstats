@@ -28,27 +28,19 @@
 | [docs/TESTING.md](docs/TESTING.md) | 三层验证各覆盖什么、怎么跑、历史教训 |
 | [docs/RELEASE.md](docs/RELEASE.md) | 版本规则、发版命令、快速通道、发版清单 |
 | [../receiver/README.md](../receiver/README.md) | **阶段 2**：接收端部署、聚合接口、报告页数据来源 |
-| [internal/spwbuild-ops/README.md](internal/spwbuild-ops/README.md) | 构建/发版脚本（release.sh / publish.sh / 下载索引）的版本化副本与部署命令 |
 | [DESIGN.md](DESIGN.md) | 设计边界与决策表（会话切分规则、上报协议） |
 | [CHANGELOG.md](../CHANGELOG.md) | 每版改了什么 + 发版清单 |
 
 项目级的**计划/里程碑/待决策**在 `projects/spw-listenstats/PROJECT.md`（工作区根目录），
 状态快照与决策日志在 `docs/project/`。
 
-## 快速下载通道（每次版本变更后同步更新）
+## 发布产物
 
 当前版本 **1.0.0**（sha256 `edd654eb95f229d77ebba6fe46fbce5fdb8d778440b0bb99ff71e8e5230c18b3`，1,846,971 字节）：
 
-| 通道 | 地址 | 说明 |
-|---|---|---|
-| HTTP（最快） | http://192.168.0.104:8123/downloads/ListenStats-1.0.0.zip | 局域网静态站，浏览器直接下 |
-| SMB | `\\192.168.0.104\backup\spw\ListenStats-1.0.0.zip` | Windows 资源管理器直接拖 |
-
-- 大小与 sha256 见本轮交付说明（由 release.sh 打印）；上面这行随版本一起更新
-- 接收端与报告页是**另一套版本号**：接收端 `spw-receiver 0.2.0`，报告页见 `receiver/README.md`
-- 通道里**只保留当前版本**；历史产物留在构建容器的 `build/dist/`
-- 发版流程：`bash /vol2/1000/docker/spwbuild/release.sh`（构建 + `selftest` + 发布到上述通道；
-  假宿主集成测试已改为可选：`bash release.sh --with-hostsim`）
+- 构建产物：`plugin/build/dist/ListenStats-<版本>.zip`（`cd plugin && ./gradlew plugin`）
+- 分发方式随你：GitHub Releases、自己的静态站 / SMB 共享、网盘都行 —— 插件本身不依赖任何分发渠道
+- 接收端与报告页是**另一套版本号**（见 [../receiver/README.md](../receiver/README.md) 与本目录 `docs/RELEASE.md`）
 
 ## 安装
 
@@ -170,20 +162,20 @@ User-Agent: SPW-ListenStats/1.0.0
 
 | 组件 | 地址 | 版本 |
 |---|---|---|
-| 收数接口（插件往这里 POST） | http://192.168.0.104:8199/api/listen | spw-receiver **0.2.0** |
-| 收数摘要（批次数/会话数/最近接收） | http://192.168.0.104:8199/api/listen | 同上 |
-| 聚合数据（报告页的数据源） | http://192.168.0.104:8199/api/report | 同上 |
-| 听歌报告页（手机可用） | http://192.168.0.104:8123/spw-report/ | 变体 B + 夜间模式 |
+| 收数接口（插件往这里 POST） | http://192.168.1.10:8199/api/listen | spw-receiver **0.2.0** |
+| 收数摘要（批次数/会话数/最近接收） | http://192.168.1.10:8199/api/listen | 同上 |
+| 聚合数据（报告页的数据源） | http://192.168.1.10:8199/api/report | 同上 |
+| 听歌报告页（手机可用） | http://192.168.1.10:8123/spw-report/ | 变体 B + 夜间模式 |
 
 ```
 SPW 插件 --POST--> spw-receiver(8199) --落盘--> data/listen-YYYY-MM-DD.jsonl
                           |
-                          +--聚合--> staticweb 静态站 web/spw-report/report-data.json
+                          +--聚合--> 静态站 web/spw-report/report-data.json
                                               |
                                      报告页同源 fetch 渲染
 ```
 
-- 报告页是**纯前端**（`index.html` + `fetch('report-data.json')`），由 staticweb 静态站托管，接收端只负责生成那个 JSON。
+- 报告页是**纯前端**（`index.html` + `fetch('report-data.json')`），由任意静态服务器托管，接收端只负责生成那个 JSON。
 - 数据不完整时页面会自己说明（例如插件还是 0.4.0：曲目榜只覆盖上报期，升级后自动补全）。
 - 部署方式、环境变量、接口字段见 [../receiver/README.md](../receiver/README.md)。
 
@@ -218,19 +210,23 @@ SPW 插件 --POST--> spw-receiver(8199) --落盘--> data/listen-YYYY-MM-DD.jsonl
 > `listenstats-hostsim` 里有一条断言专门比对两份清单内容一致，防止回归。
 
 
-### NAS 构建容器（本项目实际使用的环境）
+### 用容器构建（没有本机 JDK 时）
 
-NAS 上没有 JDK，用一次性容器构建即可：
+写好一份 `docker-compose.yml`，用固定的 Gradle + JDK 镜像跑同一条 Gradle 任务即可：
 
-```
-/vol2/1000/docker/spwbuild/
-├── docker-compose.yml      # gradle:8.14-jdk21，挂载 ./src → /src
-├── src/listenstats-plugin/ # 本工程源码
-└── data/gradle/            # Gradle 缓存（持久化，重建容器不丢）
+```yaml
+services:
+  builder:
+    image: gradle:8.14-jdk21
+    working_dir: /src/plugin
+    volumes:
+      - ./src:/src                       # src/plugin 是插件工程
+      - ./data/gradle:/home/gradle/.gradle   # Gradle 缓存持久化，重建容器不丢
+    command: ["gradle", "--no-daemon", "--console=plain", "selftest", "plugin"]
 ```
 
 ```bash
-cd /vol2/1000/docker/spwbuild && docker compose run --rm builder
+docker compose run --rm builder
 ```
 
 > ⚠️ fnOS 挂载卷上的文件权限会退化成 `000`：本地 `cat` 还能读（靠 ACL），但 `cp`/`Files.copy`

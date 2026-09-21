@@ -44,7 +44,7 @@ dependencies {
 val pluginId = "com.keyqiang.spw.listenstats"
 val pluginClass = "com.keyqiang.spw.listenstats.ListenStatsPlugin"
 val pluginName = "听歌统计"
-val pluginProvider = "KEYqiang"
+val pluginProvider = "HOTBOY-xlqaimyx"
 val pluginDescription = "记录每首曲目的收听时长并生成统计，可定时上报到你自己的服务端"
 // 本插件自己的仓库（上游 API 只作为依赖，见 NOTICE）
 val pluginRepoUrl = "https://github.com/HOTBOY-xlqaimyx/spw-listenstats"

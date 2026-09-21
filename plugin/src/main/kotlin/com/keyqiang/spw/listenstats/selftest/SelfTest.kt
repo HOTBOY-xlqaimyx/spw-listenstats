@@ -947,9 +947,9 @@ private fun testReportTrackStats() {
 }
 
 private fun testReportConfigFlags() {
-    val on = ReportConfig(true, "http://192.168.0.104:8199/api/listen", "", "interval", 10)
+    val on = ReportConfig(true, "http://192.168.1.10:8199/api/listen", "", "interval", 10)
     check("上报配置：默认启动/退出上报都开", on.describe().contains("启动上报=true") && on.describe().contains("退出上报=true"))
-    val off = ReportConfig(true, "http://192.168.0.104:8199/api/listen", "", "interval", 10, onStartup = false, onExit = false)
+    val off = ReportConfig(true, "http://192.168.1.10:8199/api/listen", "", "interval", 10, onStartup = false, onExit = false)
     check("上报配置：可各自关闭", off.describe().contains("启动上报=false") && off.describe().contains("退出上报=false"))
     check("上报配置：描述仍不泄露路径", !off.describe().contains("/api/listen"))
 }
@@ -994,10 +994,10 @@ private fun testDiagnostics() {
 private fun testConfigDescribe() {
     val engine = EngineConfig(true, 60, false).describe()
     check("诊断：引擎描述含关键项", engine.contains("统计=开") && engine.contains("空闲阈值=60s"))
-    val report = ReportConfig(true, "http://192.168.0.104:8181/api/listen?token=abc",
+    val report = ReportConfig(true, "http://192.168.1.10:8181/api/listen?token=abc",
         "super-secret-token", "interval", 10).describe()
     check("诊断：上报描述不泄露令牌", !report.contains("super-secret-token") && report.contains("令牌=有(18字符)"))
-    check("诊断：上报描述不泄露内网路径", !report.contains("/api/listen") && report.contains("192.168.0.104:8181"))
+    check("诊断：上报描述不泄露内网路径", !report.contains("/api/listen") && report.contains("192.168.1.10:8181"))
     check("诊断：空地址可描述", ReportConfig(false, "", "", "exit", 5).describe().contains("(未填)"))
     check("诊断：非法地址不抛异常", ReportConfig(true, "not a url", "", "interval", 5).describe().contains("无法解析"))
 }

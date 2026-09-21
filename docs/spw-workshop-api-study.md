@@ -1,7 +1,7 @@
 # SPW 创意工坊（Mod）API 研读笔记
 
 - 仓库：<https://github.com/Moriafly/spw-workshop-api>
-- 本地快照：`/workspace/spw/src/spw-workshop-api-main`（2026-09-16 拉取 main 分支 tar 快照，容器内无 git）
+- 本地快照：`<repo>/src/spw-workshop-api-main`（2026-09-16 拉取 main 分支 tar 快照，容器内无 git）
 - 研读时间：2026-09-16（北京时间）
 
 ---
@@ -258,7 +258,7 @@ spw-workshop-api/
 
 ## 附：本地已就绪的东西
 
-- 源码快照：`/workspace/spw/src/spw-workshop-api-main/`（main 分支，含 example）
+- 源码快照：`<repo>/src/spw-workshop-api-main/`（main 分支，含 example）
 - 依赖可用性已核实：JitPack `0.1.0-dev20` POM 可下载；pf4j 3.12.0 含注解处理器
 - 容器内无 git/gradle/JDK；如需真编译要在宿主或另装工具链（宿主有 python3，无 JDK 的话需确认）
 
@@ -305,8 +305,8 @@ spw-workshop-api/
    （编译警告 *hides Java field 'log'*），改名 `logger` 即可。
 7. `SpwPlugin` 的构造函数**必须**是 `(PluginContext)`（宿主用自定义 PluginFactory 注入），
    README 里 `class X : SpwPlugin()` 的写法是过期文档。
-8. 构建环境：NAS 无 JDK → 用 `gradle:8.14-jdk21` 一次性容器（详见
-   `/vol2/1000/docker/spwbuild/docker-compose.yml`），Gradle 缓存挂到 `data/gradle`。
+8. 构建环境：本机没 JDK 时用 `gradle:8.14-jdk21` 一次性容器跑 Gradle 任务，
+   Gradle 缓存挂出来持久化（重建容器不丢）。
 9. **fnOS 挂载卷的文件权限会退化成 `000`**：Gradle 在挂载卷里产出的 zip，`ls -l` 显示 `----------`，
    本地 `cat` 还能读（ACL 生效），但 `cp` / Java `Files.copy` 会把这个 000 带到新位置 →
    目标文件真的读不了（PF4J 报 `FileNotFoundException ... Permission denied`）。

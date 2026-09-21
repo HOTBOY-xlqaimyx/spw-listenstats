@@ -6,7 +6,7 @@
 - GET  /api/report   返回**聚合后的报告数据**（报告页用的就是它），并会顺手刷新静态文件
 - GET  /health       健康检查
 
-聚合结果会原子写入 <REPORT_DIR>/report-data.json —— 报告页由 staticweb 静态站托管，
+聚合结果会原子写入 <REPORT_DIR>/report-data.json —— 报告页由静态站托管，
 同源 fetch 这个文件即可，不需要跨域、不需要改 nginx。
 
 只依赖标准库。令牌：设置环境变量 SPW_TOKEN 才校验 X-SPW-Stats-Token；不设置则接受任意请求。

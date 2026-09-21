@@ -17,7 +17,7 @@
 ## 第 2 层：假宿主机集成测试（可选，`--with-hostsim`）
 
 ```bash
-cd /vol2/1000/docker/spwbuild && bash release.sh --with-hostsim
+# 作者私有发布链：release.sh --with-hostsim（本仓库不含该脚本，见 PUBLISH-CHECKLIST）
 # 或单独: docker compose run --rm hostsim
 ```
 

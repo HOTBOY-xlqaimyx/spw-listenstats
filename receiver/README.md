@@ -4,19 +4,19 @@
 
 | 组件 | 版本 | 位置 |
 |---|---|---|
-| `receiver.py` | **0.2.2** | 宿主 `/vol2/1000/docker/spw-receiver/receiver.py`，容器 `spw-receiver`（`python:3-alpine`） |
-| 报告页 | **v0.4.1**（变体 B + 夜间模式 + 时间范围/新鲜度/搜索/二维码/最近播放） | 宿主 `/vol2/1000/docker/staticweb/web/spw-report/index.html`（staticweb 静态站，8123） |
+| `receiver.py` | **0.2.2** | 宿主 `/srv/spw-receiver/receiver.py`，容器 `spw-receiver`（`python:3-alpine`） |
+| 报告页 | **v0.4.1**（变体 B + 夜间模式 + 时间范围/新鲜度/搜索/二维码/最近播放） | 宿主 `/srv/www/web/spw-report/index.html`（部署在你的静态站上，示例端口 8123） |
 | 报告数据 | 每次收到上报即重写 | 同上目录 `report-data.json`（由接收端生成） |
 
 ## 地址
 
 | 用途 | 地址 |
 |---|---|
-| 插件上报地址（填进插件配置） | `http://192.168.0.104:8199/api/listen`（POST） |
-| 收数摘要 | `http://192.168.0.104:8199/api/listen`（GET） |
-| 聚合数据（报告页的数据源） | `http://192.168.0.104:8199/api/report`（GET，会顺手刷新静态文件） |
-| 健康检查 | `http://192.168.0.104:8199/health` |
-| **听歌报告页** | `http://192.168.0.104:8123/spw-report/` |
+| 插件上报地址（填进插件配置） | `http://192.168.1.10:8199/api/listen`（POST） |
+| 收数摘要 | `http://192.168.1.10:8199/api/listen`（GET） |
+| 聚合数据（报告页的数据源） | `http://192.168.1.10:8199/api/report`（GET，会顺手刷新静态文件） |
+| 健康检查 | `http://192.168.1.10:8199/health` |
+| **听歌报告页** | `http://192.168.1.10:8123/spw-report/` |
 
 ## 数据流
 
@@ -24,7 +24,7 @@
 SPW 插件 --POST /api/listen--> receiver
    ├─ 原文追加到 /data/listen-YYYY-MM-DD.jsonl（含 receivedAt/remote/token 标记/UA）
    ├─ 聚合：最新一批的 summary（总量/按天/曲目聚合）+ 所有批次的 sessions 并集
-   └─ 原子写入 /report/report-data.json（= staticweb 静态站目录）
+   └─ 原子写入 /report/report-data.json（= 静态站目录）
 报告页 --同源 fetch report-data.json--> 渲染（总时长 / 每日 / 艺人榜 / 曲目榜）
 ```
 
@@ -32,8 +32,8 @@ SPW 插件 --POST /api/listen--> receiver
 
 | 容器内 | 宿主 | 用途 |
 |---|---|---|
-| `/data` | `/vol2/1000/docker/spw-receiver/data` | 原始上报 jsonl |
-| `/report` | `/vol2/1000/docker/staticweb/web/spw-report` | 报告页与 `report-data.json` |
+| `/data` | `/srv/spw-receiver/data` | 原始上报 jsonl |
+| `/report` | `/srv/www/web/spw-report` | 报告页与 `report-data.json` |
 | `/app/receiver.py` | `.../receiver/receiver.py`（只读） | 代码 |
 
 ## 环境变量
@@ -62,28 +62,28 @@ SPW 插件 --POST /api/listen--> receiver
 ## 部署 / 更新
 
 ```bash
-# 代码在 DSH 工作区（/vol2/1000/docker/dsh/workspace/spw/receiver/），复制过去再重建：
-sudo cp /vol2/1000/docker/dsh/workspace/spw/receiver/receiver.py     /vol2/1000/docker/spw-receiver/
-sudo cp /vol2/1000/docker/dsh/workspace/spw/receiver/docker-compose.yml /vol2/1000/docker/spw-receiver/
-cd /vol2/1000/docker/spw-receiver && sudo docker compose up -d --force-recreate
+# 代码在本仓库的 receiver/ 目录，复制到部署位置再重建：
+sudo cp <repo>/receiver/receiver.py     /srv/spw-receiver/
+sudo cp <repo>/receiver/docker-compose.yml /srv/spw-receiver/
+cd /srv/spw-receiver && sudo docker compose up -d --force-recreate
 sudo docker logs --tail 20 spw-receiver
 ```
 
 报告页：
 
 ```bash
-sudo cp /vol2/1000/docker/dsh/workspace/spw/web/index.html \
-        /vol2/1000/docker/staticweb/web/spw-report/index.html
-sudo chmod 644 /vol2/1000/docker/staticweb/web/spw-report/index.html
+sudo cp <repo>/web/index.html \
+        /srv/www/web/spw-report/index.html
+sudo chmod 644 /srv/www/web/spw-report/index.html
 ```
 
 ## 排障
 
 | 现象 | 检查 |
 |---|---|
-| 报告页「还没有收到任何上报」 | `curl http://192.168.0.104:8199/api/listen` 看批次数；插件配置里的地址/开关/令牌 |
+| 报告页「还没有收到任何上报」 | `curl http://192.168.1.10:8199/api/listen` 看批次数；插件配置里的地址/开关/令牌 |
 | 曲目榜只有最近几首 | 插件还是 0.4.0：升级到 0.5.0 后重开 SPW，会自动带上全量 `trackStats` |
 | 页面报「读取数据失败」 | `report-data.json` 是否存在于 web 目录、权限是否 644、接收端日志是否「报告已刷新」 |
-| 数据不更新 | 接收端容器是否在跑；挂载的 web 目录是否是 staticweb 正在托管的那个 |
+| 数据不更新 | 接收端容器是否在跑；挂载的 web 目录是否是静态站正在托管的那个 |
 
 > 权限坑：fnOS 挂载卷上新建文件权限会退化成 `000`，接收端写入后显式 `chmod 644`；目录 `755`。

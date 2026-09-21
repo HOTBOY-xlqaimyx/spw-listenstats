@@ -15,31 +15,29 @@
 ## 一条命令
 
 ```bash
-bash /vol2/1000/docker/spwbuild/release.sh            # 构建 + selftest + 发布到快速通道
-bash /vol2/1000/docker/spwbuild/release.sh 0.2.2      # 指定版本
-bash /vol2/1000/docker/spwbuild/release.sh --with-hostsim   # 需要交叉验证时再加跑假宿主
+# 1) 改 plugin/build.gradle.kts 里的 version
+# 2) 构建 + 自测 + 打包
+cd plugin && ./gradlew selftest plugin     # 产物：build/dist/ListenStats-<版本>.zip
 ```
 
-`release.sh` = `docker compose run --rm builder`（= 编译 + `selftest` + 打包）+ `publish.sh`（发布）。
+需要**可复现的构建环境**时，作者在自己机器上用固定的 Gradle/JDK 容器跑同一条 Gradle 任务
+（`gradle selftest plugin`），再交给发布脚本分发；那套脚本与机器路径属于**作者私有运维**，不在本仓库内。
 
 ## 快速下载通道（每次发版必须同步并交付）
 
-| 通道 | 地址模板 |
-|---|---|
-| HTTP（最快） | `http://192.168.0.104:8123/downloads/ListenStats-<ver>.zip` |
-| SMB | `\\192.168.0.104\backup\spw\ListenStats-<ver>.zip` |
-| DSH 工作区 | `/vol2/1000/docker/dsh/workspace/spw/ListenStats-<ver>.zip` |
+发布 = 把 `plugin/build/dist/ListenStats-<版本>.zip` 交付出去。渠道自选（GitHub Releases / 自建静态站 / SMB / 网盘）。
 
-- `publish.sh` 会自动**删掉通道里的旧版本**（历史产物留在构建容器的 `build/dist/`）
-- 交付用户时必须附上：**两条链接 + sha256 + 字节数**
+- 交付时**必须**附上：**下载链接 + sha256 + 字节数**（用户要能校验产物）
+- 渠道里建议**只保留当前版本**，历史产物留在 `build/dist/`
+- 作者的私有发布脚本（`release.sh` / `publish.sh` / 下载索引生成器）不在本仓库内
 
 ## 阶段 2 组件的版本（与插件版本分开记）
 
 | 组件 | 版本 | 位置 |
 |---|---|---|
 | 插件 zip | `1.0.0` | 快速通道 `ListenStats-1.0.0.zip` |
-| 接收端 | `spw-receiver 0.2.2` | `/vol2/1000/docker/spw-receiver/receiver.py` |
-| 报告页 | `v0.4.1`（变体 B + 夜间模式 + 时间范围/新鲜度/搜索/二维码/最近播放 + 手动/自动刷新）；**部署前需用 `web/tools/build-report-page.py` 生成内联二维码** | `/vol2/1000/docker/staticweb/web/spw-report/index.html` |
+| 接收端 | `spw-receiver 0.2.2` | `receiver/receiver.py` |
+| 报告页 | `v0.4.1`（夜间模式 + 时间范围/新鲜度/搜索/二维码/最近播放 + 手动/自动刷新）；**部署前需用 `web/tools/build-report-page.py` 生成内联二维码** | 部署到你的静态服务器 |
 
 改这三者中的任何一个都要**递增对应版本号**，并在 [../../receiver/README.md](../../receiver/README.md)
 或本目录 README 里同步；插件 zip 之外的组件不进快速下载通道。
@@ -49,12 +47,11 @@ bash /vol2/1000/docker/spwbuild/release.sh --with-hostsim   # 需要交叉验证
 报告页源文件在 `web/index.html`，**线上页必须用构建脚本生成**（它把二维码内联进去）：
 
 ```bash
-# 宿主上（venv 里装了 python-qrcode）
-/vol2/1000/docker/spwbuild/pyenv/bin/python \
-  web/tools/build-report-page.py \
+pip install qrcode          # 只在这一步需要
+python3 web/tools/build-report-page.py \
   web/index.html \
-  /vol2/1000/docker/staticweb/web/spw-report/index.html \
-  http://192.168.0.104:8123/spw-report/
+  <输出目录>/index.html \
+  http://<你的服务器>:8123/spw-report/     # 二维码内容 = 报告页真实地址
 ```
 
 同时把源文件复制成插件内置模板（本地报告用的就是它）：`cp web/index.html plugin/src/main/resources/web/report.html`，
