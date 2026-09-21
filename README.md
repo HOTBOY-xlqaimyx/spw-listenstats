@@ -26,19 +26,28 @@
 ## 目录结构
 
 ```
-.
-├── plugin/                 Kotlin 插件（Gradle 工程，含包装器）
-│   ├── src/main/kotlin/    统计引擎 / 存储 / 上报 / 本地报告 / 自测
-│   ├── src/main/resources/ 配置页声明、内置报告页模板
-│   └── docs/               架构、宿主实测笔记、测试策略、发版流程、上游 1.19 计划
-├── receiver/               Python 接收端（只用标准库）
-├── web/                    报告页（单文件纯前端）+ 页面构建脚本
-├── docs/                   宿主 API 研究、组件关系图、项目决策记录
-├── CONTRIBUTING.md         贡献指南（含硬约束）
-├── CHANGELOG.md            各版本改了什么
-├── SECURITY.md             安全与数据边界
-└── NOTICE                  第三方组件声明（Apache-2.0 要求）
+spw-listenstats/
+├── plugin/                    Kotlin 插件（Gradle 工程，自带包装器）
+│   ├── src/main/kotlin/…      统计引擎 / 存储 / 上报 / 本地报告 / 自测（11 个 .kt）
+│   ├── src/main/resources/    preference_config.json（配置页声明）、web/report.html（内置报告页模板）
+│   ├── docs/                  架构、宿主实测笔记、测试策略、发版流程、上游 1.19 计划
+│   ├── DESIGN.md              设计边界与决策
+│   ├── README.md              插件主文档（安装 / 配置 / 协议 / 排障）
+│   └── gradlew · build.gradle.kts · gradle/   构建入口与包装器
+├── receiver/                  Python 接收端（只用标准库）
+│   ├── receiver.py · docker-compose.yml · README.md
+├── web/                       报告页（单文件纯前端）
+│   ├── index.html             页面源文件
+│   └── tools/build-report-page.py   部署前生成内联二维码
+├── docs/                      宿主 API 研究、组件关系图、发布检查清单
+├── .github/                   CI 工作流 + Issue / PR 模板
+├── README.md · CHANGELOG.md · CONTRIBUTING.md · SECURITY.md · CODE_OF_CONDUCT.md
+├── LICENSE · NOTICE           Apache-2.0 与第三方声明
+└── .editorconfig · .gitattributes · .gitignore
 ```
+
+> 只跟踪上述内容；个人听歌数据（`sessions.jsonl` / `listenstats.json` / `report-data.json`）、
+> 构建产物与内部运维资产都在 `.gitignore` 里。
 
 ## 文档索引
 
