@@ -1,0 +1,38 @@
+# —— 构建产物 ——
+build/
+.gradle/
+dist/
+
+# —— 归档/二进制：只放行 Gradle 包装器（它必须入库，否则 clone 后 ./gradlew 不可用）——
+*.zip
+*.jar
+!gradle-wrapper.jar
+
+# —— IDE / 系统 ——
+.idea/
+*.iml
+local.properties
+.DS_Store
+Thumbs.db
+.vscode/
+
+# —— 个人数据：绝不能进仓库（听歌记录、统计、日志、配置）——
+sessions.jsonl
+listenstats.json
+report-queue.json
+report-data.json
+listenstats.log*
+config.json
+*.jsonl
+
+# —— 内部资产：不属于本仓库（NAS 运维、测试宿主、上游源码快照、临时文件、内部记录）——
+internal/
+listenstats-hostsim/
+spwbuild-ops/
+reference/
+tmp/
+
+# —— Python ——
+__pycache__/
+*.pyc
+.venv/
