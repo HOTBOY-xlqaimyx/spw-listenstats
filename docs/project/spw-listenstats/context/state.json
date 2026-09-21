@@ -1,0 +1,170 @@
+{
+  "project": "spw-listenstats",
+  "name": "SPW 听歌统计插件",
+  "updatedAt": "2026-09-21T18:50:13+00:00",
+  "phase": "开发中（0.x，未上线）",
+  "currentVersion": "0.4.0",
+  "artifact": {
+    "file": "ListenStats-0.4.0.zip",
+    "bytes": 1797262,
+    "sha256": "9ccd116a715790ec9668ebb626891956675e241c3a8ab1ca5562528ec95b0aa2"
+  },
+  "releaseChannels": {
+    "http": "http://192.168.0.104:8123/downloads/ListenStats-0.4.0.zip",
+    "smb": "\\\\192.168.0.104\\backup\\spw\\ListenStats-0.4.0.zip",
+    "dshWorkspace": "/vol2/1000/docker/dsh/workspace/spw/ListenStats-0.4.0.zip",
+    "rule": "每次版本变更后必须同步通道并把链接与哈希交付用户"
+  },
+  "paths": {
+    "plugin": "/workspace/spw/plugin",
+    "hostsim": "/workspace/spw/listenstats-hostsim",
+    "apiStudy": "/workspace/spw/spw-workshop-api-study.md",
+    "buildWorkspace": "/vol2/1000/docker/spwbuild (宿主)",
+    "linuxHostApp": "/vol2/1000/docker/spwbuild/data/linuxrun/spl (解压的 Steam Linux 包，仅用于可行性验证)"
+  },
+  "verification": {
+    "build": "NAS gradle:8.14-jdk21 容器真编译，通过",
+    "selftest": {
+      "checks": 118,
+      "status": "pass"
+    },
+    "hostsim": {
+      "checks": 114,
+      "status": "pass",
+      "note": "假 SPW 宿主，真实 PF4J 加载交付 zip；已改为可选步骤，默认不跑"
+    },
+    "realHostLinux": {
+      "status": "pass",
+      "host": "Salt Player 1.18.0 Linux (Steam), PF4J 3.14.1, JDK 25 JBR",
+      "checked": "描述符解析 / 加载 / resolved / Start plugin / 扩展点实例化 / 插件落盘日志",
+      "blocked": "播放级回调被宿主所有权校验（This application requires a package identity）阻塞，不做规避"
+    },
+    "realHostWindows": {
+      "status": "pass",
+      "host": "Salt Player 1.18.0 Steam, Windows 11, Java 25.0.3 JBR",
+      "evidence": "5 天累计 10889s / 56 会话 / 35 曲目，数据自洽、0 异常；0.2.1 生效（0 秒噪音 61→0）"
+    },
+    "uploadChain": {
+      "status": "pass（双向对账一致）",
+      "verifiedAt": "2026-09-22T00:24:12+08:00",
+      "evidence": "日志 4 次上报成功（1+2+1+1 条会话）↔ 接收端 4 批 5 条会话；四条分别来自 00:06 首报、00:14 手动(待发2)、00:19 pluginStop(浮夸 256s)、00:24 定时(富士山下 257s)；第 4 批 pluginVersion=0.3.0；无重复 id；每条 listenedSeconds 与 endedAt-startedAt 跨度吻合；summary 累计 13922s/68 会话/45 曲目，daily 求和自洽",
+      "triggersSeen": [
+        "手动",
+        "pluginStop(收尾)",
+        "定时"
+      ],
+      "triggersPending": [
+        "会话结束（需 mode=每曲结束）",
+        "启动补发（需启动时队列非空）"
+      ]
+    }
+  },
+  "pending": [
+    {
+      "id": "P1",
+      "owner": "user",
+      "item": "✅ 已定案（0.7.0）：默认计入；迟到曲目信息回填归因；真归不了的记 totals.unattributedSeconds（进总量与每日、不进榜单），报告页脚注显示；**基线：历史未归因不补算，计数器从装上 0.7.0 起从 0 开始**（已核实本地/接收端均无历史残留）"
+    },
+    {
+      "id": "P2",
+      "owner": "user",
+      "item": "阶段 2（NAS 接收端 + 手机适配报告页）是否开工"
+    },
+    {
+      "id": "P3",
+      "owner": "done",
+      "item": "上报链路真机验证 —— ✅ 已完成（2026-09-22 首次真实上报核验通过）"
+    },
+    {
+      "id": "P4",
+      "owner": "agent",
+      "item": "albumArtist 为空的定性：**诊断已就位（0.6.2 起首次触发日志带 album/albumArtist，空值写「(空)」）**，等下一次真机日志即可判定是文件标签缺失还是宿主未传"
+    },
+    {
+      "id": "P5",
+      "owner": "user",
+      "item": "是否正式上线（升 1.0.0）"
+    },
+    {
+      "id": "P6",
+      "owner": "user",
+      "item": "已完成：报告页 v0.1.0 上线 + 接收端 0.2.1 聚合；真机已确认 trackSource=trackStats、coverage.full=true、曲目 55 首全量"
+    },
+    {
+      "id": "P7",
+      "owner": "user",
+      "item": "历史补发：聚合视图已由 trackStats 补齐，只剩「逐条会话明细」缺开启前数据 → 低优先级，暂不做"
+    },
+    {
+      "id": "P8",
+      "owner": "agent",
+      "item": "触发源核对：手动 ✅ / 退出(插件停止+JVM 钩子) ✅ / 定时 ✅ / **启动补发 ✅（2026-09-22 01:10:16 收到 0.6.1 的 summaryOnly=true 记录，队列为空仍送达）**；仅剩「会话结束（mode=session）」未验，需切换模式后听一首"
+    },
+    {
+      "id": "P9",
+      "item": "已完成（2026-09-22）：0.6.1 装上后启动即补发全量摘要，报告页曲目榜变 55 首、coverage.full=true"
+    },
+    {
+      "id": "P10",
+      "item": "SPW 1.19 适配（等宿主正式发布）：升 API dev21、声明 LIBRARY_READ 权限、用 getCurrentMediaItem() 彻底消灭未归因、产物改 .spmod——清单见 docs/UPSTREAM-1.19.md"
+    }
+  ],
+  "knownLimitations": [
+    "插件加载时已在播放的曲目拿不到 MediaItem（宿主不补调歌词回调）→ 默认不入库",
+    "无播放队列/音频流/完整歌词轴 API",
+    "宿主运行时无 java.net.http，HTTP 只能用 java.net.HttpURLConnection",
+    "7 次启动只有 1 次优雅退出 → 「仅退出时上报」模式不可靠，建议用定时批量"
+  ],
+  "receiver": {
+    "container": "spw-receiver",
+    "port": 8199,
+    "version": "0.2.1",
+    "endpoints": {
+      "post": "/api/listen",
+      "summary": "/api/listen",
+      "report": "/api/report",
+      "health": "/health"
+    },
+    "reportFile": "/vol2/1000/docker/staticweb/web/spw-report/report-data.json",
+    "reportPage": "http://192.168.0.104:8123/spw-report/",
+    "allVariants": [
+      "http://192.168.0.104:8123/spw-report/v1/ (暗色 Linear)",
+      "http://192.168.0.104:8123/spw-report/v2/ (亮色卡片 + 夜间模式) ← 已选",
+      "http://192.168.0.104:8123/spw-report/v3/ (极简排版)"
+    ],
+    "dataSource": "summary.trackStats（插件 0.5.0+，全量）/ 回退 sessions（仅上报期）"
+  },
+  "hostVersionSeen": "1.18.0 → 1.18.5（实测期间宿主升级，插件 API 兼容）",
+  "userConfigObserved": {
+    "report.enabled": true,
+    "report.url": "http://192.168.0.104:8199/api/listen",
+    "report.intervalMinutes": "4.36278（滑条值，插件取整为 4 分钟，日志可见 间隔=4min）",
+    "report.mode": "缺省 → 默认 interval（定时批量，攒着一起发）",
+    "report.token": "未设置（接收端不校验）",
+    "stats.countUnknownTrack": "未设置 → 关闭"
+  },
+  "versions": {
+    "plugin": "0.9.5",
+    "receiver": "0.2.2",
+    "reportPage": "v0.4.1"
+  },
+  "upstream": {
+    "apiLatest": "0.1.0-dev20（= main HEAD）",
+    "nextMajor": "PR #25：API 0.1.0-dev21 面向 SPW 1.19，含 WorkshopApi.playback.getCurrentMediaItem() / 曲库查询 / MediaItem.id+duration / 权限系统 / .spmod 打包",
+    "doc": "listenstats-plugin/docs/UPSTREAM-1.19.md"
+  },
+  "offline": {
+    "localReportDefault": "%USERPROFILE%\\Documents\\SPW听歌统计\\ListenStats-本地报告.html（可配 local.dir）",
+    "sessionHistory": "sessions.jsonl（滚动 2000 条）",
+    "pageBuild": "部署线上页需跑 web/tools/build-report-page.py 生成内联二维码 SVG"
+  },
+  "architecture": {
+    "primary": "本地（插件自维护的本地报告 + listenstats.json + sessions.jsonl）",
+    "optional": "NAS 上报 + 接收端 0.2.2 + 在线页（手机扫码 / 远程查看）"
+  },
+  "ops": {
+    "dir": "/vol2/1000/docker/spwbuild",
+    "versionedCopy": "/workspace/spw/spwbuild-ops（release.sh/publish.sh/gen_download_index.py + README）",
+    "autoSync": "release.sh 自动同步 docker-compose.yml 里 hostsim 的 zip 参数"
+  }
+}

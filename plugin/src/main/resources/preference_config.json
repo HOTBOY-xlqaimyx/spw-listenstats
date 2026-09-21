@@ -1,0 +1,198 @@
+{
+  "configs": [
+    {
+      "title": "听歌统计",
+      "config": "config.json",
+      "preferences": [
+        {
+          "key": "stats.enabled",
+          "type": "switch",
+          "title": "启用听歌统计",
+          "summary": "关闭后不再记录新数据，已有的都保留",
+          "default_value": true
+        },
+        {
+          "key": "stats.idleGapSeconds",
+          "type": "list",
+          "title": "会话断开阈值",
+          "summary": "暂停或关歌超过这么久，就结算当前这一场",
+          "entries": [
+            "15 秒",
+            "30 秒",
+            "60 秒（推荐）",
+            "2 分钟",
+            "5 分钟"
+          ],
+          "entry_values": [
+            "15",
+            "30",
+            "60",
+            "120",
+            "300"
+          ],
+          "default_value": "60"
+        },
+        {
+          "key": "stats.countUnknownTrack",
+          "type": "switch",
+          "title": "未识别曲目的时长也计入",
+          "summary": "插件启动时已在播的那首，宿主不会告知曲目 —— 这段时间仍计入总量与每日，但单独标为「未归因」，不进曲目榜",
+          "default_value": true
+        },
+        {
+          "key": "local.enabled",
+          "type": "switch",
+          "title": "生成本地报告",
+          "summary": "听完一场就自动更新一份自带数据的 HTML 报告，双击就能看，不需要 NAS 或服务器",
+          "default_value": true
+        },
+        {
+          "key": "local.dir",
+          "type": "edittext",
+          "title": "本地报告保存位置",
+          "summary": "留空 = 我的文档\\SPW听歌统计；也可填同步盘或共享目录，例如本地盘 D:\\听歌统计，或已映射的网络盘 Z:\\听歌统计",
+          "default_value": ""
+        },
+        {
+          "type": "button",
+          "title": "刷新本地报告",
+          "summary": "平时会自动更新；点一下立刻生成最新的一份",
+          "arrow_type": "none",
+          "on_click": "com.keyqiang.spw.listenstats.ListenStatsPlugin.refreshLocalReportNow"
+        },
+        {
+          "type": "button",
+          "title": "打开本地报告",
+          "summary": "在浏览器里打开本地报告（还没生成就先自动生成）",
+          "arrow_type": "none",
+          "on_click": "com.keyqiang.spw.listenstats.ListenStatsPlugin.openLocalReport"
+        },
+        {
+          "type": "button",
+          "title": "查看统计摘要",
+          "summary": "弹窗显示累计时长、会话次数、曲目数与今日时长",
+          "arrow_type": "none",
+          "on_click": "com.keyqiang.spw.listenstats.ListenStatsPlugin.showSummary"
+        },
+        {
+          "type": "button",
+          "title": "输出诊断信息",
+          "summary": "把运行环境、配置与回调计数写进日志文件，排障时整份发来即可",
+          "arrow_type": "none",
+          "on_click": "com.keyqiang.spw.listenstats.ListenStatsPlugin.dumpDiagnostics"
+        },
+        {
+          "type": "button",
+          "title": "打开数据目录",
+          "summary": "统计数据（listenstats.json）、会话历史（sessions.jsonl）、待发队列与日志都在这里",
+          "arrow_type": "arrow",
+          "on_click": "com.keyqiang.spw.listenstats.ListenStatsPlugin.openDataDir"
+        }
+      ]
+    },
+    {
+      "title": "上报到自己的服务端（可选扩展）",
+      "config": "config.json",
+      "preferences": [
+        {
+          "key": "report.enabled",
+          "type": "switch",
+          "title": "启用上报",
+          "summary": "打开后才会把统计发到你的服务端；关闭则完全本地，不发任何网络请求",
+          "default_value": false
+        },
+        {
+          "key": "report.url",
+          "type": "edittext",
+          "title": "上报地址",
+          "summary": "你的接收端地址；局域网自建形如 http://192.168.1.100:8199/api/listen，有域名也可填 https://stats.example.com/api/listen",
+          "default_value": ""
+        },
+        {
+          "key": "report.token",
+          "type": "edittext",
+          "title": "上报令牌",
+          "summary": "作为 X-SPW-Stats-Token 请求头发送；服务端没要求就留空",
+          "default_value": ""
+        },
+        {
+          "key": "report.onStartup",
+          "type": "switch",
+          "title": "启动时自动上报",
+          "summary": "启动时若上次有没发出去的记录，立刻补发一次",
+          "default_value": true
+        },
+        {
+          "key": "report.onExit",
+          "type": "switch",
+          "title": "退出时自动上报",
+          "summary": "退出或停用时补发一次（短超时，不会卡住关软件）；并用 JVM 退出钩子兜住正常关窗；被强杀则不执行",
+          "default_value": true
+        },
+        {
+          "key": "report.mode",
+          "type": "list",
+          "title": "上报时机",
+          "summary": "定时批量 = 攒一批发一次（省事）；每曲结束 = 听完一首立刻发（最实时）；仅退出 = 关软件时才发",
+          "entries": [
+            "定时批量上报",
+            "每曲结束时上报",
+            "仅退出时上报"
+          ],
+          "entry_values": [
+            "interval",
+            "session",
+            "exit"
+          ],
+          "default_value": "interval"
+        },
+        {
+          "key": "report.intervalMinutes",
+          "type": "list",
+          "title": "定时上报间隔",
+          "summary": "「定时批量」的间隔",
+          "entries": [
+            "1 分钟",
+            "2 分钟",
+            "5 分钟",
+            "10 分钟（推荐）",
+            "15 分钟",
+            "30 分钟",
+            "60 分钟"
+          ],
+          "entry_values": [
+            "1",
+            "2",
+            "5",
+            "10",
+            "15",
+            "30",
+            "60"
+          ],
+          "default_value": "10"
+        },
+        {
+          "type": "button",
+          "title": "立即上报",
+          "summary": "立刻把还没发出去的记录发一次（没有新会话时也会推送最新摘要）",
+          "arrow_type": "none",
+          "on_click": "com.keyqiang.spw.listenstats.ListenStatsPlugin.flushNow"
+        },
+        {
+          "key": "report.pageUrl",
+          "type": "edittext",
+          "title": "在线报告页地址",
+          "summary": "填了可用下面的按钮一键打开；一般是 http://192.168.1.100:8123/spw-report/（换成你自己的服务器地址）",
+          "default_value": ""
+        },
+        {
+          "type": "button",
+          "title": "打开在线报告页",
+          "summary": "在浏览器里打开上面的地址（需要 NAS / 接收端在线）",
+          "arrow_type": "none",
+          "on_click": "com.keyqiang.spw.listenstats.ListenStatsPlugin.openReportPage"
+        }
+      ]
+    }
+  ]
+}

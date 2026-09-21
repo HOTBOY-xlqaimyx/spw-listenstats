@@ -1,0 +1,33 @@
+SPW 听歌统计（spw-listenstats）
+Copyright 2026 KEYqiang
+
+本作品采用 Apache License 2.0 授权，许可证全文见本目录 LICENSE 文件。
+
+----------------------------------------------------------------------
+本作品包含或依赖以下第三方组件，特此致谢并声明：
+
+1) Kotlin 标准库（kotlin-stdlib）
+   Copyright JetBrains s.r.o. and Kotlin Programming Language contributors
+   Licensed under the Apache License, Version 2.0
+   —— **随本插件分发包分发**（`lib/` 目录内）。其许可证全文与仓库内 LICENSE 相同。
+
+2) PF4J（org.pf4j:pf4j）
+   Copyright Decebal Suiu
+   Licensed under the Apache License, Version 2.0
+   —— **仅编译期依赖**：由 Salt Player 宿主在运行时提供，不在本插件的分发包内。
+
+3) SPW 创意工坊 API（com.github.Moriafly:spw-workshop-api）
+   Copyright Moriafly and contributors（https://github.com/Moriafly/spw-workshop-api）
+   Licensed under the Apache License, Version 2.0
+   —— **仅编译期依赖**：由 Salt Player 宿主在运行时提供。
+   本仓库**不包含**该上游项目的源码；开发时本地下载的上游源码快照不纳入版本管理。
+
+4) 接收端与网页
+   - `receiver/`：只使用 Python 标准库，无第三方运行时依赖。
+   - `web/`：报告页 / 入口页为纯手写 HTML + CSS + JS，**不含任何第三方前端库**。
+   - `web/tools/build-report-page.py`：**构建期**使用 python-qrcode（BSD-3-Clause）生成二维码 SVG，
+     该库不随产物分发。
+
+----------------------------------------------------------------------
+「Salt Player」「SPW」等名称与商标归其各自权利人所有。本项目是非官方的第三方插件，
+与 Salt Player 官方无隶属关系。

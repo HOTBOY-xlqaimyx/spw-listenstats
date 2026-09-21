@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 使用与配置问题
+    url: https://github.com/HOTBOY-xlqaimyx/spw-listenstats/blob/main/plugin/README.md
+    about: 安装、配置、日志排障、上报协议都写在插件 README 里
+  - name: 安全问题（请勿公开）
+    url: https://github.com/HOTBOY-xlqaimyx/spw-listenstats/security/advisories/new
+    about: 漏洞请走私密报告，见 SECURITY.md

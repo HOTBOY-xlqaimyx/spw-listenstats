@@ -1,0 +1,27 @@
+name: 功能建议
+description: 想要新的统计维度、新的展示方式、新的上报能力等
+title: "[Feature] "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        提之前建议先看两处，很可能已经有结论：
+        - `plugin/DESIGN.md` —— 设计边界（哪些事**受宿主 API 限制做不到**）
+        - `plugin/docs/UPSTREAM-1.19.md` —— 上游即将提供的能力（例如「查询当前曲目」）
+  - type: textarea
+    id: problem
+    attributes:
+      label: 你想解决什么问题
+      description: 描述场景，不必先想实现方案
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: 你设想的做法（可选）
+  - type: textarea
+    id: constraints
+    attributes:
+      label: 是否涉及宿主 API
+      description: 若需要新的宿主回调/查询接口，请说明（我们无法自行扩展宿主的 API 面）

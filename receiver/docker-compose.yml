@@ -1,0 +1,19 @@
+services:
+  receiver:
+    image: python:3-alpine
+    container_name: spw-receiver
+    restart: unless-stopped
+    ports:
+      - "8199:8199"
+    volumes:
+      - /vol2/1000/docker/spw-receiver/data:/data
+      - /vol2/1000/docker/spw-receiver/receiver.py:/app/receiver.py:ro
+      # 报告页由 staticweb 静态站托管（8123），接收端把聚合结果直接写进它的目录：
+      # 同源 fetch，不用跨域、不用改 nginx
+      - /vol2/1000/docker/staticweb/web/spw-report:/report
+    environment:
+      PORT: "8199"
+      DATA_DIR: /data
+      REPORT_DIR: /report
+      TZ: Asia/Shanghai
+    command: ["python3", "-u", "/app/receiver.py"]
