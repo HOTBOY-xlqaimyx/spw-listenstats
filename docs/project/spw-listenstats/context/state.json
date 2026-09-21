@@ -1,7 +1,7 @@
 {
   "project": "spw-listenstats",
   "name": "SPW 听歌统计插件",
-  "updatedAt": "2026-09-21T18:50:13+00:00",
+  "updatedAt": "2026-09-21T19:08:27+00:00",
   "phase": "开发中（0.x，未上线）",
   "currentVersion": "0.4.0",
   "artifact": {
@@ -144,7 +144,7 @@
     "stats.countUnknownTrack": "未设置 → 关闭"
   },
   "versions": {
-    "plugin": "0.9.5",
+    "plugin": "1.0.0",
     "receiver": "0.2.2",
     "reportPage": "v0.4.1"
   },
@@ -166,5 +166,11 @@
     "dir": "/vol2/1000/docker/spwbuild",
     "versionedCopy": "/workspace/spw/spwbuild-ops（release.sh/publish.sh/gen_download_index.py + README）",
     "autoSync": "release.sh 自动同步 docker-compose.yml 里 hostsim 的 zip 参数"
+  },
+  "repo": {
+    "layout": "monorepo: plugin/ receiver/ web/ docs/ + 根级标准文件",
+    "license": "Apache-2.0",
+    "git": "已本地初始化并首次提交（54 文件），未推送",
+    "prePublish": "docs/PUBLISH-CHECKLIST.md（含脱敏清单）"
   }
 }

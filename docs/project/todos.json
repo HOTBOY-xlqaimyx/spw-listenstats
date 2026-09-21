@@ -147,6 +147,20 @@
       "priority": "low",
       "createdAt": "2026-09-21T18:50:13+00:00",
       "context": "这四项做过方案但用户没选；要做时直接说。另有两处刻意接受的不便：在线页最近播放只 20 条（接收端摘要上限）、首次用「打开在线报告页」需自己粘地址（避免把作者内网地址带进插件）。"
+    },
+    {
+      "task": "（已完成）发布 1.0.0 + 仓库标准化（Apache-2.0、monorepo、社区文件、CI、首次提交）",
+      "status": "done",
+      "priority": "high",
+      "createdAt": "2026-09-21T19:08:27+00:00",
+      "context": "插件 1.0.0（edd654eb…）；git 已初始化并提交 54 文件；未推送。公开前必做脱敏，见 docs/PUBLISH-CHECKLIST.md。"
+    },
+    {
+      "task": "公开前脱敏：把内网地址/路径/用户名从 tracked 文档里换掉（清单见 PUBLISH-CHECKLIST）",
+      "status": "pending",
+      "priority": "normal",
+      "createdAt": "2026-09-21T19:08:27+00:00",
+      "context": "192.168.0.104、/vol2/1000/docker/...、C:\\Users\\hotboy 等出现在 README/plugin docs/docs/project 里；另外 docs/project/** 是否要随公开仓库发布需要你定。"
     }
   ]
 }

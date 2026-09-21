@@ -4,6 +4,29 @@
 
 ---
 
+## 2026-09-22｜发布 1.0.0 + 仓库标准化（Apache-2.0）
+
+**用户决定**：发布 1.0；按 GitHub 标准结构整理；不违反开源标准。范围 = 插件 + 接收端 + 报告页 + 文档（monorepo），
+许可证 = **Apache-2.0**（与上游 API / kotlin-stdlib / PF4J 一致），仓库名 `spw-listenstats`，**先本地备好、暂不推送**。
+
+**结构**：`plugin/`（Gradle 工程）+ `receiver/`（Python）+ `web/`（报告页 + 构建脚本）+ `docs/`（API 研究、组件图、项目记录）
++ 根级标准文件（README/LICENSE/NOTICE/CHANGELOG/CONTRIBUTING/CODE_OF_CONDUCT/SECURITY/.editorconfig/.gitignore/.github）。
+内部资产（假宿主、发版脚本、上游源码快照、含真实听歌数据的设计变体）移入 `internal/`、`reference/` 并 gitignore。
+
+**合规要点**：
+- `lib/` 内含 **kotlin-stdlib（Apache-2.0）** → 必须随附许可证与声明：根 `LICENSE`+`NOTICE`，并打进插件 zip。
+- PF4J / spw-workshop-api 仅 `compileOnly`（宿主提供，不分发）；上游源码快照不纳入版本管理。
+- 接收端只用 Python 标准库；报告页零第三方 JS；页面构建脚本用的 python-qrcode 只在构建期使用。
+- 踩坑：`from()` 对不存在的文件是**静默忽略**的 → 第一次打的 1.0.0 包里根本没有 LICENSE；
+  已补 `check()` 守卫（缺文件直接构建失败）并把仓库根的 LICENSE/NOTICE 同步进构建容器的 `/src`。
+
+**自查中发现的两个自身失误（已修/已记录）**：
+1. 备份用了 `tar --exclude=src`，把 `plugin/src` 一起排除了 → **备份残缺**；已重做完整备份并核对源码（13 个 .kt 完好）。
+2. 我此前断言"仓库里没有 Gradle wrapper"是**错的**（wrapper 一直存在，我没核实）→ 已纠正。
+
+**验证**：`selftest` 210 项；四通道 zip 哈希一致（`edd654eb…`，1,846,971 字节）；包内含 LICENSE/NOTICE/内置报告页/配置声明；
+`git init` + 首次提交 54 个文件，**个人数据与内部资产均未入库**。
+
 ## 2026-09-22｜查缺补漏（0.9.4 / 0.9.5）：修 2 个真 bug + 4 处缺口
 
 **方法**：按「代码 → 数据 → 文档 → 交付」四层逐层过，凡是有断言/实测能证明的都当场验。
