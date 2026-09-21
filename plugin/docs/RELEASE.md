@@ -35,7 +35,7 @@ cd plugin && ./gradlew selftest plugin     # 产物：build/dist/ListenStats-<�
 
 | 组件 | 版本 | 位置 |
 |---|---|---|
-| 插件 zip | `1.0.0` | 快速通道 `ListenStats-1.0.0.zip` |
+| 插件 zip | `1.0.1` | `ListenStats-1.0.1.zip` |
 | 接收端 | `spw-receiver 0.2.2` | `receiver/receiver.py` |
 | 报告页 | `v0.4.1`（夜间模式 + 时间范围/新鲜度/搜索/二维码/最近播放 + 手动/自动刷新）；**部署前需用 `web/tools/build-report-page.py` 生成内联二维码** | 部署到你的静态服务器 |
 

@@ -1,6 +1,6 @@
 # SPW 听歌统计（ListenStats）
 
-> 当前版本 **1.0.0**（首个正式版）（未正式上线，改动历史见 [CHANGELOG.md](../CHANGELOG.md)）。规则：**任何修改都递增版本号**，
+> 当前版本 **1.0.1**（首个正式版线 1.0.x）（未正式上线，改动历史见 [CHANGELOG.md](../CHANGELOG.md)）。规则：**任何修改都递增版本号**，
 > 未上线期间停留在 `0.x`；每次发版重跑两套验证并同步下载通道。
 
 > Salt Player for Windows 创意工坊插件 · 基于 [spw-workshop-api](https://github.com/Moriafly/spw-workshop-api) `0.1.0-dev20`
@@ -36,7 +36,7 @@
 
 ## 发布产物
 
-当前版本 **1.0.0**（sha256 `edd654eb95f229d77ebba6fe46fbce5fdb8d778440b0bb99ff71e8e5230c18b3`，1,846,971 字节）：
+当前版本 **1.0.1**（sha256 见发布说明；1.0.0 仅 manifest 的「开源地址」误指上游 API 仓库，1.0.1 已指向本仓库）：
 
 - 构建产物：`plugin/build/dist/ListenStats-<版本>.zip`（`cd plugin && ./gradlew plugin`）
 - 分发方式随你：GitHub Releases、自己的静态站 / SMB 共享、网盘都行 —— 插件本身不依赖任何分发渠道
@@ -44,7 +44,7 @@
 
 ## 安装
 
-方式一（推荐）：SPW → 设置 → 创意工坊 → 模组管理 → 右上角**导入模组** → 选 `ListenStats-1.0.0.zip` → 启用。
+方式一（推荐）：SPW → 设置 → 创意工坊 → 模组管理 → 右上角**导入模组** → 选 `ListenStats-1.0.1.zip` → 启用。
 
 方式二：把 zip 解压到
 `%APPDATA%\Salt Player for Windows\workshop\plugins\`（保持 `classes/`、`lib/` 结构），重启 SPW 后在模组管理里启用。
@@ -185,7 +185,7 @@ SPW 插件 --POST--> spw-receiver(8199) --落盘--> data/listen-YYYY-MM-DD.jsonl
 
 ```bash
 ./gradlew selftest   # 纯逻辑自测：JSON / 统计引擎 / 存储 / HTTP 上报（当前 79 项）
-./gradlew plugin     # 产出 build/dist/ListenStats-1.0.0.zip
+./gradlew plugin     # 产出 build/dist/ListenStats-1.0.1.zip
 ```
 
 > **构建避坑（实测定论）**：`spw-workshop-api:0.1.0-dev20` 的 POM 仍以 `compile` 作用域挂着
@@ -269,7 +269,7 @@ docker compose run --rm builder
 
 ## 首次真机试用清单（Windows / Linux 版 SPW）
 
-1. **导入**：设置 → 创意工坊 → 模组管理 → 右上角「导入模组」→ 选 `ListenStats-1.0.0.zip` → 启用
+1. **导入**：设置 → 创意工坊 → 模组管理 → 右上角「导入模组」→ 选 `ListenStats-1.0.1.zip` → 启用
 2. **看启动提示**：应弹出 `听歌统计已启动，累计 0 秒`
 3. **放一首歌**，播 10 秒以上后暂停 → 点配置页「查看统计摘要」，应看到「累计 x 秒 / 1 次 / 1 首」
 4. **点「打开数据目录」**：应打开资源管理器并弹出路径；若按钮无效，去日志里找 `数据目录=...` 那一行
@@ -370,7 +370,7 @@ Salt Player 自 **2026-09-14** 原生支持 Linux（Steam 新闻《Now available
 # 先构建插件
 cd plugin && ./gradlew plugin
 # 再用假宿主加载它
-cd ../listenstats-hostsim && ./gradlew run --args="../plugin/build/dist/ListenStats-1.0.0.zip"  # 假宿主工程在内部目录，不在本仓库
+cd ../listenstats-hostsim && ./gradlew run --args="../plugin/build/dist/ListenStats-1.0.1.zip"  # 假宿主工程在内部目录，不在本仓库
 ```
 
 它做的事：复制 zip 到临时 plugins 目录（需 `chmod`，见下）→ `WorkshopPluginManager` 加载 → 断言描述符/扩展点/元数据
