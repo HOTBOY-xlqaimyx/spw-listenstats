@@ -106,4 +106,6 @@ User-Agent: SPW-ListenStats/1.0.0
 4. **配置项要改三处**：`preference_config.json`、`ConfigKeys.ALL`、README 配置表；`selftest` 会比对前两者，漏一处就失败。
 5. **改报告页要同步三处**：`web/index.html`（源）→ 用 `web/tools/build-report-page.py` 生成线上页（见 `web/README.md`）→ 复制成 `plugin/src/main/resources/web/report.html` 并升插件版本。
 6. **文案面向普通用户**：结论前置、不用实现术语、示例用通用地址（不写自己的内网地址）。
-7. **不提交个人数据**：`sessions.jsonl` / `listenstats.json` / `report-data.json` 与含真实听歌记录的示例都不进仓库。
+7. **自测断言必须与环境无关**：不能依赖本机时区、路径分隔符、机器名或本地时间（CI 跑在 UTC 的 Linux 上 ——
+   2026-09-22 第一次开 CI 就因为「ISO 带时区」断言写死 `+08:00` 而失败）。
+8. **不提交个人数据**：`sessions.jsonl` / `listenstats.json` / `report-data.json` 与含真实听歌记录的示例都不进仓库。

@@ -1003,7 +1003,11 @@ private fun testConfigDescribe() {
 }
 private fun testLogFormat() {
     check("日志：时间格式", Regex("""\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}""").matches(Log.timestamp(1_760_000_000_000L)))
-    check("日志：ISO 带时区", Log.iso(1_760_000_000_000L).contains("+08:00") || Log.iso(1_760_000_000_000L).endsWith("Z"))
+    // ⚠️ 不能断言具体时区：CI 跑在 UTC，本机可能是 +08:00（第一次开 CI 就被这个坑挂了）
+    check(
+        "日志：ISO 带时区与时区无关",
+        Regex("""\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}([+-]\d{2}:\d{2}|Z)""").containsMatchIn(Log.iso(1_760_000_000_000L))
+    )
 }
 
 // ---------------------------------------------------------------- main
