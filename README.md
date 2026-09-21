@@ -1,7 +1,10 @@
 # SPW 听歌统计 · spw-listenstats
 
+[![CI](https://github.com/HOTBOY-xlqaimyx/spw-listenstats/actions/workflows/ci.yml/badge.svg)](https://github.com/HOTBOY-xlqaimyx/spw-listenstats/actions/workflows/ci.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
+
 > Salt Player for Windows 创意工坊模组：记录**每首歌听了多久**，并生成一份**双击就能看**的报告页。
-> 当前版本 **1.0.0**（首个正式版）· 许可证 **Apache-2.0**
+> 当前版本 **1.0.1** · 许可证 **Apache-2.0**
 
 **设计取向：本地是默认形态，服务端是可选扩展。** 装上插件什么都不用配就能用；
 想要手机看、或者多设备汇总，再部署接收端与在线页（都在本仓库里）。
